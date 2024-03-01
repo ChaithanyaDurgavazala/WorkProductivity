@@ -135,7 +135,7 @@ def getSynonymsWithChemicalFormula(input_str):
                     df=pd.read_csv(stream,encoding='cp1252')
                     df=df[df['Chemicalformula']==input_str]
                     if len(df)>0:
-                        return df['Synonyms'].tolist()
+                        return df['Synonyms'].tolist()[0]
                     else:
                         return None 
                 else:
