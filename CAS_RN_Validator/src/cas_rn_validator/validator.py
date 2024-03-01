@@ -1,8 +1,5 @@
 import pandas as pd
 
-
-
-
 '''
 Function to validate the CAS REGISTRY NUMBER
 '''
