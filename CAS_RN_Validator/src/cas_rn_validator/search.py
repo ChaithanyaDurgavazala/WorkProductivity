@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import pkg_resources
 import cas_rn_validator.validator as v
@@ -7,47 +9,32 @@ import cas_rn_validator.validator as v
 Function to search ChemicalFormula With CAS NUMBER
 '''
 def getChemicalFormulaWithCAS(input_str):
-    # validate cas registry number
-    if v.validateCAS_RN(input_str)==True:
-        # exception handling for wrong cas_rn dataset file format
-        try:
-            for entry in pkg_resources.resource_listdir('CAS_RN_Validator.src.cas_rn_validator', 'data'):
-                if((entry.split('.')[-1])=='csv'):
-                    # making stream for fetching datset from data folder
-                    stream = pkg_resources.resource_stream(__name__, 'data\\'+entry)
-                    # reading csv and getting data
-                    df=pd.read_csv(stream)
-                    df=df[df['CAS_Number']==input_str]
-                    return df['Chemicalformula'].tolist()[0]
-                else:
-                    raise Exception('Please put data file in csv format')
-        except Exception as E:
-            return(E)
+    # validating cas registry number
+    if v.validateCAS_RN(input_str) == True:
+        # reading csv and getting data
+        dataset_path = os.path.join(os.path.dirname(__file__), 'data', 'cas_rn_dataset.csv')
+        df = pd.read_csv(dataset_path)
+
+        df = df[df['CAS_Number'] == input_str]
+        return df['Chemicalformula'].tolist()[0]
 
     else:
-        return None      
+        return None
 
 
 '''
 Function to search Synonyms With CAS NUMBER
 '''
 def getSynonymsWithCAS(input_str):
-    # validate cas registry number
-    if v.validateCAS_RN(input_str)==True:
-        # exception handling for wrong cas_rn dataset file format
-        try:
-            for entry in pkg_resources.resource_listdir('CAS_RN_Validator.src.cas_rn_validator', 'data'):
-                if((entry.split('.')[-1])=='csv'):
-                    # making stream for fetching datset from data folder
-                    stream = pkg_resources.resource_stream(__name__, 'data\\'+entry)
-                    # reading csv and getting data
-                    df=pd.read_csv(stream)
-                    df=df[df['CAS_Number']==input_str]
-                    return df['Synonyms'].tolist()[0]
-                else:
-                    raise Exception('Please put data file in csv format')
-        except Exception as E:
-            return(E)
+    # validating cas registry number
+    if v.validateCAS_RN(input_str) == True:
+        # reading csv and getting data
+        dataset_path = os.path.join(os.path.dirname(__file__), 'data', 'cas_rn_dataset.csv')
+        df = pd.read_csv(dataset_path)
+
+        df = df[df['CAS_Number'] == input_str]
+        return df['Synonyms'].tolist()[0]
+
     else:
         return None      
 
@@ -56,92 +43,74 @@ def getSynonymsWithCAS(input_str):
 Function to search CASNumber With Synonyms
 '''
 def getCASNumberWithSynonyms(input_str):
-        # exception handling for wrong cas_rn dataset file format    
-        try:
-            for entry in pkg_resources.resource_listdir('CAS_RN_Validator.src.cas_rn_validator', 'data'):
-                if((entry.split('.')[-1])=='csv'):
-                    # making stream for fetching datset from data folder
-                    stream = pkg_resources.resource_stream(__name__, 'data\\'+entry)
-                    # reading csv and getting data
-                    df=pd.read_csv(stream)
-                    df=df[df['Synonyms']==input_str]
-                    if len(df)>0:
-                        return df['CAS_Number'].tolist()[0]
-                    else:
-                        return None 
-                else:
-                    raise Exception('Please put data file in csv format')
-        except Exception as E:
-            return(E)
+    # reading csv and getting data
+    dataset_path = os.path.join(os.path.dirname(__file__), 'data', 'cas_rn_dataset.csv')
+    df = pd.read_csv(dataset_path)
+    # Convert input string to lowercase for case insensitivity
+    input_str_lower = input_str.lower()
+    # Convert 'Synonyms' column to lowercase for case insensitivity
+    df['Synonyms'] = df['Synonyms'].str.lower()
+    df_filtered = df[df['Synonyms'] == input_str_lower]
+    if not df_filtered.empty:
+        return df_filtered['CAS_Number'].iloc[0]
+    else:
+        return None
 
 
 '''
 Function to search ChemicalFormula With Synonyms
 '''
 def getChemicalFormulaWithSynonyms(input_str):
-        # exception handling for wrong cas_rn dataset file format 
-        try:
-            for entry in pkg_resources.resource_listdir('CAS_RN_Validator.src.cas_rn_validator', 'data'):
-                # making stream for fetching datset from data folder
-                if((entry.split('.')[-1])=='csv'):
-                    # reading csv and getting data
-                    stream = pkg_resources.resource_stream(__name__, 'data\\'+entry)
-                    df=pd.read_csv(stream)
-                    df=df[df['Synonyms']==input_str]
-                    if len(df)>0:
-                        return df['Chemicalformula'].tolist()[0]
-                    else:
-                        return None 
-                else:
-                    raise Exception('Please put data file in csv format')
-        except Exception as E:
-            return(E)
+    # reading csv and getting data
+    dataset_path = os.path.join(os.path.dirname(__file__), 'data', 'cas_rn_dataset.csv')
+    df = pd.read_csv(dataset_path)
+    # Convert input string to lowercase for case insensitivity
+    input_str_lower = input_str.lower()
+    # Convert 'Synonyms' column to lowercase for case insensitivity
+    df['Synonyms'] = df['Synonyms'].str.lower()
+    df_filtered = df[df['Synonyms'] == input_str_lower]
+    if not df_filtered.empty:
+        return df_filtered['Chemicalformula'].iloc[0]
+    else:
+        return None
+
+
 
 
 '''
 Function to search CASNumber With ChemicalFormula
 '''
 def getCASNumberWithChemicalFormula(input_str):
-        # exception handling for wrong cas_rn dataset file format 
-        try:
-            for entry in pkg_resources.resource_listdir('CAS_RN_Validator.src.cas_rn_validator', 'data'):
-                # making stream for fetching datset from data folder
-                if((entry.split('.')[-1])=='csv'):
-                    # reading csv and getting data
-                    stream = pkg_resources.resource_stream(__name__, 'data\\'+entry)
-                    df=pd.read_csv(stream,encoding='cp1252')
-                    df=df[df['Chemicalformula']==input_str]
-                    if len(df)>0:
-                        return df['CAS_Number'].tolist()[0]
-                    else:
-                        return None 
-                else:
-                    raise Exception('Please put data file in csv format')
-        except Exception as E:
-            return(E)
+    # reading csv and getting data
+    dataset_path = os.path.join(os.path.dirname(__file__), 'data', 'cas_rn_dataset.csv')
+    df = pd.read_csv(dataset_path)
+    # Convert input string to lowercase for case insensitivity
+    input_str_lower = input_str.lower()
+    # Convert 'Synonyms' column to lowercase for case insensitivity
+    df['Chemicalformula'] = df['Chemicalformula'].str.lower()
+    df_filtered = df[df['Chemicalformula'] == input_str_lower]
+    if not df_filtered.empty:
+        return df_filtered['CAS_Number'].iloc[0]
+    else:
+        return None
 
 
 '''
 Function to search Synonyms With ChemicalFormula
 '''
 def getSynonymsWithChemicalFormula(input_str):
-        # exception handling for wrong cas_rn dataset file format 
-        try:
-            for entry in pkg_resources.resource_listdir('CAS_RN_Validator.src.cas_rn_validator', 'data'):
-                # making stream for fetching datset from data folder
-                if((entry.split('.')[-1])=='csv'):
-                    # reading csv and getting data
-                    stream = pkg_resources.resource_stream(__name__, 'data\\'+entry)
-                    df=pd.read_csv(stream,encoding='cp1252')
-                    df=df[df['Chemicalformula']==input_str]
-                    if len(df)>0:
-                        return df['Synonyms'].tolist()[0]
-                    else:
-                        return None 
-                else:
-                    raise Exception('Please put data file in csv format')
-        except Exception as E:
-            return(E)
+    # reading csv and getting data
+    dataset_path = os.path.join(os.path.dirname(__file__), 'data', 'cas_rn_dataset.csv')
+    df = pd.read_csv(dataset_path)
+    # Convert input string to lowercase for case insensitivity
+    input_str_lower = input_str.lower()
+    # Convert 'Synonyms' column to lowercase for case insensitivity
+    df['Chemicalformula'] = df['Chemicalformula'].str.lower()
+    df_filtered = df[df['Chemicalformula'] == input_str_lower]
+    if not df_filtered.empty:
+        return df_filtered['Synonyms'].iloc[0]
+    else:
+        return None
 
 
 '''
