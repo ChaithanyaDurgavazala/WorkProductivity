@@ -10,7 +10,6 @@ setup(
     author_email='your@email.com',
     url='https://github.com/yourusername/CAS_RN_Validator',  # URL to your package repository
     packages=find_packages(where='src'),  # Look for packages under the 'src' directory
-
     package_dir={'': 'src'},  # Specify the root package directory
     classifiers=[
         'Programming Language :: Python :: 3',
@@ -19,5 +18,6 @@ setup(
     ],
     python_requires='>=3.6',  # Define Python version requirement
     install_requires=['pandas'],  # Add any dependencies your package needs
-    package_data={'': ['data/*.csv']},
+    package_data={'cas_rn_validator': ['data/*.csv']},
+    include_package_data=True,
 )
