@@ -1,7 +1,5 @@
 import os
-
 import pandas as pd
-import pkg_resources
 import cas_rn_validator.validator as v
 
 
