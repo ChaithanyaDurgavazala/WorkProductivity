@@ -18,6 +18,6 @@ setup(
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.6',  # Define Python version requirement
-    install_requires=['pandas'],  # Add any dependencies your package needs
+    install_requires=['pandas','importlib_resources'],  # Add any dependencies your package needs
     package_data={'': ['data/*.csv']},
 )
